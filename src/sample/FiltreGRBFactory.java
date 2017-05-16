@@ -15,15 +15,15 @@ import java.io.File;
  */
 public class FiltreGRBFactory extends FiltreFactory {
 
-    public FiltreGRBFactory(int hauteur,int largeur)
+    public FiltreGRBFactory(Image image)
     {
-        super(hauteur,largeur);
+        super(image);
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)
     {
-        for(int i=0;i<hauteur;i++) {
-            for (int j = 0; j <largeur; j++) {
+        for(int i=0;i<image.getWidth();i++) {
+            for (int j = 0; j <image.getHeight(); j++) {
                 setColor(image.getPixelReader().getColor(i,j));
                 setColor(Color.color(getColor().getGreen(),getColor().getBlue(),getColor().getRed()));
                 writer.setColor(i,j,getColor());

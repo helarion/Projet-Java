@@ -15,17 +15,17 @@ import java.io.File;
  */
 public class FiltreSepiaFactory extends FiltreFactory {
 
-    public FiltreSepiaFactory(int hauteur,int largeur)
+    public FiltreSepiaFactory(Image image)
     {
-        super(hauteur,largeur);
+        super(image);
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)
     {
-        for(int i=0;i<hauteur;i++) {
-            for (int j = 0; j <largeur; j++) {
+        for(int i=0;i<image.getWidth();i++) {
+            for (int j = 0; j <image.getHeight(); j++) {
                 setColor(image.getPixelReader().getColor(i,j));
-                System.out.println("rouge :"+getColor().getRed()+"vert :"+getColor().getGreen()+"bleu :"+getColor().getBlue());
+                //System.out.println("rouge :"+getColor().getRed()+"vert :"+getColor().getGreen()+"bleu :"+getColor().getBlue());
                 double sepiaR=(getColor().getRed()*0.393) + (getColor().getGreen()*0.769) + (getColor().getBlue()*0.189);
                 double sepiaG=(getColor().getRed()*0.349) + (getColor().getGreen()*0.686) + (getColor().getBlue()*0.168);
                 double sepiaB=(getColor().getRed()*0.272) + (getColor().getGreen()*0.534) + (getColor().getBlue()*0.131);

@@ -8,16 +8,16 @@ import javafx.scene.paint.Color;
 
 public class FiltreNoirEtBlancFactory extends FiltreFactory {
 
-    public FiltreNoirEtBlancFactory(int hauteur,int largeur)
+    public FiltreNoirEtBlancFactory(Image image)
     {
-        super(hauteur,largeur);
+        super(image);
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)
     {
 
-        for(int i=0;i<hauteur;i++) {
-            for (int j = 0; j <largeur; j++) {
+        for(int i=0;i<image.getWidth();i++) {
+            for (int j = 0; j <image.getHeight(); j++) {
                 setColor(image.getPixelReader().getColor(i,j));
                 double gris=(getColor().getBlue()+getColor().getGreen()+getColor().getRed())/3;
                 setColor(Color.color(gris,gris,gris));

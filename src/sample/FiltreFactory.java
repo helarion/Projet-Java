@@ -11,9 +11,9 @@ public abstract class FiltreFactory {
     private WritableImage writable;
     PixelWriter writer;
 
-    public FiltreFactory(int hauteur, int largeur)
+    public FiltreFactory(Image image)
     {
-        writable = new WritableImage(largeur,hauteur);
+        writable = new WritableImage((int)image.getWidth(), (int)image.getHeight());
         writer=writable.getPixelWriter();
     }
 
