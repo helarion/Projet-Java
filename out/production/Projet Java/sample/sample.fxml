@@ -10,7 +10,7 @@
       xmlns:fx="http://javafx.com/fxml" alignment="center">
     <children>
         <ImageView fx:id="imageView"/>
-        <Button fx:id="openButton" text="Parcourir"/>
+        <Button fx:id="openButton" text="Parcourir" onAction="#ajouterClicked"/>
         <HBox fx:id="inputLayout">
             <children>
                 <Button fx:id="grbButton" text="GRB" onAction="#grbClicked"/>
@@ -23,12 +23,9 @@
         </HBox>
         <Label text="Créer un tag:"/>
         <TextField fx:id="tagField"/>
-        <Button fx:id="ajouterTagButton" text="Créer un tag"/>
-        <HBox>
-            <children>
-                <Slider fx:id="slider"/>
-            </children>
+        <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
+        <Slider fx:id="slider"/>
+        <HBox fx:id="filtresLayout">
         </HBox>
-        <Label fx:id="tagLabel"/>
     </children>
 </VBox>

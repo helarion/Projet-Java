@@ -115,7 +115,7 @@ public class Controller {
             imageView.setFitHeight(hauteur);
             imageView.setFitWidth(largeur);
             //drawRotatedImage(gc, image,  0,   0,   0);
-            inputLayout.getChildren().addAll(imageView);
+            //inputLayout.getChildren().addAll(imageView);
         }
     }
 
@@ -151,7 +151,6 @@ public class Controller {
         imageView.setRotationAxis(saveAxis);
     }
 
-
     private void updateTag()
     {
         filtresLayout.getChildren().clear();
@@ -162,17 +161,6 @@ public class Controller {
             filtresLayout.getChildren().add(label);
         }
         imageProjet.toXml();
-    }
-
-    private void openFile(File file) {
-        try {
-            desktop.open(file);
-        } catch (IOException ex) {
-            Logger.getLogger(
-                    Main.class.getName()).log(
-                    Level.SEVERE, null, ex
-            );
-        }
     }
 }
 
