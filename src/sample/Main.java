@@ -8,11 +8,14 @@ import javafx.geometry.Point3D;
 import javafx.scene.Scene;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
@@ -21,9 +24,11 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
 import javafx.beans.value.ChangeListener;
-import java.awt.*;
+
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,97 +36,44 @@ public class Main extends Application {
 
     private Desktop desktop = Desktop.getDesktop();
     private Image image;
+    private ImageProjet imageProjet = new ImageProjet();
+
     private ImageView imageView = new ImageView();
+    private FiltreFactory filtre;
+
+    private HBox filtresLayout = new HBox();
+
+    int hauteur=500;
+    int largeur=500;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         image = new Image("file:ressources/a.jpg");
+        imageProjet.setImage(image);
         imageView.setImage(image);
-
-        double hauteur=image.getHeight();
-        double largeur=image.getWidth();
 
         primaryStage.setWidth(700);
         primaryStage.setHeight(700);
 
-        WritableImage image2 = new WritableImage(1000,1000);
-        PixelWriter writer=image2.getPixelWriter();
+       // WritableImage writable = new WritableImage(largeur,hauteur);
+        //PixelWriter writer=writable.getPixelWriter();
 
+        imageView.setImage(image);
 
-        //System.out.println("hauteur : "+ hauteur +"; largeur : "+ largeur);
-        Color couleur;
-
-/*
-        for(int i=0;i<500;i++) {
-            for (int j = 0; j <500; j++) {
-                couleur=image1.getPixelReader().getColor(i,j);
-                couleur=Color.color(couleur.getRed(),couleur.getGreen(),couleur.getBlue());
-                writer.setColor(i,j,couleur);
-            }
-        }
-*/
-        /////////////////////inverseur couleur ///////////////////////////////////
-       /*
-        for(int i=0;i<500;i++) {
-            for (int j = 0; j <500; j++) {
-                couleur=image1.getPixelReader().getColor(i,j);
-                couleur=Color.color(couleur.getGreen(),couleur.getBlue(),couleur.getRed());
-                writer.setColor(i,j,couleur);
-            }
-        }
-        */
-        //////////////////Noir et blanc//////////////////////////////
-       /*
-        for(int i=0;i<500;i++) {
-            for (int j = 0; j <500; j++) {
-                couleur=image1.getPixelReader().getColor(i,j);
-                double gris=(couleur.getBlue()+couleur.getGreen()+couleur.getRed())/3;
-                couleur=Color.color(gris,gris,gris);
-                writer.setColor(i,j,couleur);
-            }
-        }
-        */
-        /////////////////////////////////////////////////////////////
-        //////////////////sepia//////////////////////////////
-        /*
-        for(int i=0;i<500;i++) {
-            for (int j = 0; j <500; j++) {
-                couleur=image.getPixelReader().getColor(i,j);
-                System.out.println("rouge :"+couleur.getRed()+"vert :"+couleur.getGreen()+"bleu :"+couleur.getBlue());
-                double sepiaR=(couleur.getRed()*0.393) + (couleur.getGreen()*0.769) + (couleur.getBlue()*0.189);
-                double sepiaG=(couleur.getRed()*0.349) + (couleur.getGreen()*0.686) + (couleur.getBlue()*0.168);
-                double sepiaB=(couleur.getRed()*0.272) + (couleur.getGreen()*0.534) + (couleur.getBlue()*0.131);
-                if(sepiaR>1){
-                    sepiaR=1;
-                }
-                if(sepiaG>1){
-                    sepiaG=1;
-                }
-                if(sepiaB>1){
-                    sepiaB=1;
-                }
-                couleur=Color.color(sepiaR,sepiaG,sepiaB);
-                writer.setColor(i,j,couleur);
-            }
-        }
-        */
-        /////////////////////////////////////////////////////////////
-        ///////////////  Sobel //////////////////////////////////////
-        for(int i=0;i<500;i++) {
-            for (int j = 0; j <500; j++) {
-                couleur=image.getPixelReader().getColor(i,j);
-                couleur=Color.color(couleur.getRed(),couleur.getGreen(),couleur.getBlue());
-                writer.setColor(i,j,couleur);
-            }
-        }
-        ///////////////////////////////////////////////////////////////
-        imageView.setImage(image2);
+        imageView.setFitHeight(hauteur);
+        imageView.setFitWidth(largeur);
 
         final FileChooser fileChooser = new FileChooser();
 
         final Button openButton = new Button("Parcourir...");
-        final VBox inputLayout = new VBox();
+        final Button inversButton = new Button ("Inverser couleurs");
+        final Button nbButton = new Button ("Noir et blanc");
+        final Button sepiaButton = new Button ("Sepia");
+        final Button sobelButton = new Button ("Sobel");
+        Label labelTag = new Label("Tag:");
+        TextField tagField = new TextField();
+        final Button ajouterTagButton = new Button("Ajouter");
 
         Slider slider = new Slider();
         slider.setMin(0);
@@ -132,6 +84,52 @@ public class Main extends Application {
         slider.setMajorTickUnit(180);
         slider.setMinorTickCount(10);
         slider.setBlockIncrement(10);
+
+        VBox mainLayout = new VBox();
+        VBox imageLayout = new VBox();
+        VBox inputLayout = new VBox();
+        HBox effectsLayout = new HBox();
+        Pane rootGroup = new VBox(12);
+
+        inversButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        filtre=new FiltreGRBFactory(hauteur,largeur);
+                        filtre.setFilter(hauteur,largeur,imageView,image);
+                        imageProjet.addFiltre(filtre);
+                    }
+                });
+
+        nbButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        filtre=new FiltreNoirEtBlancFactory(hauteur,largeur);
+                        filtre.setFilter(hauteur,largeur,imageView,image);
+                        imageProjet.addFiltre(filtre);
+                        imageProjet.toXml();
+                    }
+                });
+
+        sepiaButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        filtre=new FiltreSepiaFactory(hauteur,largeur);
+                        filtre.setFilter(hauteur,largeur,imageView,image);
+                        imageProjet.addFiltre(filtre);
+                    }
+                });
+
+        sobelButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        filtre=new FiltreSobelFactory(hauteur,largeur);
+                        filtre.setFilter(hauteur,largeur,imageView,image);
+                    }
+                });
 
         slider.valueProperty().addListener(new ChangeListener()
         {
@@ -152,9 +150,21 @@ public class Main extends Application {
                         if (file != null) {
                             image = new Image(file.toURI().toString());
                             imageView.setImage(image);
+                            imageView.setFitHeight(hauteur);
+                            imageView.setFitWidth(largeur);
                             //drawRotatedImage(gc, image,  0,   0,   0);
                             inputLayout.getChildren().addAll(imageView);
                         }
+                    }
+                });
+
+        ajouterTagButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        String tag= tagField.getText();
+                        imageProjet.addTag(tag);
+                        updateTag();
                     }
                 });
 
@@ -177,21 +187,44 @@ public class Main extends Application {
             }
         });
 
-        VBox imagePane = new VBox();
-        inputLayout.getChildren().addAll(slider);
+        imageLayout.getChildren().addAll(imageView);
 
-        imagePane.getChildren().addAll(imageView);
         inputLayout.getChildren().addAll(openButton);
-        inputLayout.getChildren().addAll(reflect);
 
-        final Pane rootGroup = new VBox(12);
-        rootGroup.getChildren().addAll(imagePane);
+        effectsLayout.getChildren().addAll(nbButton);
+        effectsLayout.getChildren().addAll(sepiaButton);
+        effectsLayout.getChildren().addAll(inversButton);
+        effectsLayout.getChildren().addAll(sobelButton);
+        effectsLayout.getChildren().addAll(reflect);
+
+        inputLayout.getChildren().addAll(effectsLayout);
+        inputLayout.getChildren().addAll(slider);
+        inputLayout.getChildren().add(labelTag);
+        inputLayout.getChildren().add(tagField);
+        inputLayout.getChildren().addAll(ajouterTagButton);
+        inputLayout.getChildren().addAll(filtresLayout);
+
+        mainLayout.getChildren().addAll(imageLayout);
+        mainLayout.getChildren().addAll(inputLayout);
+
+        rootGroup.getChildren().addAll(imageLayout);
         rootGroup.getChildren().addAll(inputLayout);
         rootGroup.setPadding(new Insets(12, 12, 12, 12));
 
-        primaryStage.setTitle("Test d'affichage d'image");
+        primaryStage.setTitle("Projet Java");
         primaryStage.setScene(new Scene(rootGroup, 1000, 1000));
         primaryStage.show();
+    }
+
+    private void updateTag() {
+        filtresLayout.getChildren().clear();
+        ArrayList<String> list=imageProjet.getListeTag();
+        for(int i=0;i<list.size();i++)
+        {
+            Label label = new Label(list.get(i)+" ");
+            filtresLayout.getChildren().add(label);
+        }
+        imageProjet.toXml();
     }
 
     private void openFile(File file) {
