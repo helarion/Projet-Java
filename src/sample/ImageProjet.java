@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ImageProjet {
 
-
     private String image;
     private int rotation;
     private String filtre;

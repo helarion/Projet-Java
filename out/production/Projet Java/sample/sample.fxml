@@ -23,15 +23,14 @@
                 <Button fx:id="nbButton" onAction="#nbClicked" text="Noir et blanc" />
                 <Button fx:id="sepiaButton" onAction="#sepiaClicked" text="Sepia" />
                 <Button fx:id="sobelButton" onAction="#sobelClicked" text="Sobel" />
-                <Button fx:id="symButton" onAction="#symClicked" text="Symetrie" />
-                <Button fx:id="chiffrerButto" onAction="#chiffrerClicked" text="Chiffrer" />
-                <Button fx:id="dechiffrerButton" onAction="#dechiffrerClicked" text="Déchiffrer" />
             </children>
         </HBox>
       <HBox prefHeight="35.0" prefWidth="820.0">
          <children>
             <Label text="Mot de Passe :" />
              <TextField fx:id="motDePasseTextField" />
+             <Button fx:id="chiffrerButto" onAction="#chiffrerClicked" text="Chiffrer" />
+             <Button fx:id="dechiffrerButton" onAction="#dechiffrerClicked" text="Déchiffrer" />
          </children>
       </HBox>
         <Slider fx:id="slider" />

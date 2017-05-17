@@ -290,7 +290,7 @@ public class Controller {
             listeTag.getItems().add(list.get(i));
         }
     }
-
+    WritableImage image3;
     public void chiffrerClicked()
     {
 
@@ -321,11 +321,11 @@ public class Controller {
         }
         for(int i = 0; i <image.getWidth(); i++) {
             for(int j = 0; j <image.getHeight(); j++) {
-                System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
+                //System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
                 for(int k = 0; k <image.getWidth(); k++) {
                     for(int l = 0; l <image.getHeight(); l++) {
                         if(compteurBonPixel==(int)pixels.get(compteurPixel)){
-                            System.out.println("Pixel trouvé en ["+k+"]["+l+"]");
+                            //System.out.println("Pixel trouvé en ["+k+"]["+l+"]");
                             image2.getPixelWriter().setColor(i,j,image.getPixelReader().getColor(k,l));
                             bonPixel=true;
                             break;
@@ -342,8 +342,8 @@ public class Controller {
                 compteurPixel++;
             }
         }
-
-        imageView.setImage(image2);
+        image3=image2;
+        imageView.setImage(image3);
         imageView.setFitHeight(hauteur);
         imageView.setFitWidth(largeur);
 
@@ -357,6 +357,7 @@ public class Controller {
         int y=0;
 
         int compteurPixel=0;
+        image=image3;
 
         for(int i=0;i<(image.getWidth()*image.getHeight());i++){
             pixels.add(i);
@@ -381,13 +382,12 @@ public class Controller {
         }
         for(int i = 0; i <image.getWidth(); i++) {
             for(int j = 0; j <image.getHeight(); j++) {
-                System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
+                //System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
                 for(int k = 0; k <image.getWidth(); k++) {
                     for(int l = 0; l <image.getHeight(); l++) {
                         if(compteurBonPixel==(int)pixels.get(compteurPixel)){
-                            System.out.println("Pixel trouvé en ["+i+"]["+j+"]");
-                            x=j;
-                            y=i;
+                            //System.out.println("Pixel trouvé en ["+i+"]["+j+"]");
+                            image2.getPixelWriter().setColor(k,l,image.getPixelReader().getColor(i,j));
                             bonPixel=true;
                             break;
                         }else{
@@ -400,7 +400,7 @@ public class Controller {
 
                 }
                 compteurBonPixel=0;
-                image2.getPixelWriter().setColor(i,j,image.getPixelReader().getColor(y,x));
+
                 bonPixel=false;
                 compteurPixel++;
             }
