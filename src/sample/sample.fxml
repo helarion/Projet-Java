@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="center" spacing="5" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112" fx:controller="sample.Controller">
+<VBox alignment="center" spacing="5" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <ImageView fx:id="imageView" />
         <HBox>
@@ -25,6 +25,7 @@
                 <Button fx:id="sobelButton" onAction="#sobelClicked" text="Sobel" />
                 <Button fx:id="symButton" onAction="#symClicked" text="Symetrie" />
                 <Button fx:id="chiffrerButto" onAction="#chiffrerClicked" text="Chiffrer" />
+                <Button fx:id="dechiffrerButton" onAction="#dechiffrerClicked" text="Déchiffrer" />
             </children>
         </HBox>
       <HBox prefHeight="35.0" prefWidth="820.0">

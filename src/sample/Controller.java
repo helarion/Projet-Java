@@ -319,7 +319,6 @@ public class Controller {
         for(int i=0;i<pixels.size();i++){
             System.out.println("donnée à l'indice " + i + " = " + pixels.get(i));
         }
-        System.out.println("pixel 1 :");
         for(int i = 0; i <image.getWidth(); i++) {
             for(int j = 0; j <image.getHeight(); j++) {
                 System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
@@ -350,6 +349,73 @@ public class Controller {
 
 
     }
+
+    public void dechiffrerClicked(){
+
+        ArrayList pixels = new ArrayList();
+        int x=0;
+        int y=0;
+
+        int compteurPixel=0;
+
+        for(int i=0;i<(image.getWidth()*image.getHeight());i++){
+            pixels.add(i);
+        }
+
+
+        String motDePasse=motDePasseTextField.getText();
+        String motChiffre=Controller.encode(motDePasse);
+        byte[] talbeau=motChiffre.getBytes();
+
+        byte[] seed=talbeau;
+
+        WritableImage image2=new WritableImage((int)image.getWidth(),(int)image.getHeight());
+        boolean bonPixel=false;
+        int compteurBonPixel=0;
+
+
+
+        Collections.shuffle(pixels, new SecureRandom(seed));
+        for(int i=0;i<pixels.size();i++){
+            System.out.println("donnée à l'indice " + i + " = " + pixels.get(i));
+        }
+        for(int i = 0; i <image.getWidth(); i++) {
+            for(int j = 0; j <image.getHeight(); j++) {
+                System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
+                for(int k = 0; k <image.getWidth(); k++) {
+                    for(int l = 0; l <image.getHeight(); l++) {
+                        if(compteurBonPixel==(int)pixels.get(compteurPixel)){
+                            System.out.println("Pixel trouvé en ["+i+"]["+j+"]");
+                            x=j;
+                            y=i;
+                            bonPixel=true;
+                            break;
+                        }else{
+                            compteurBonPixel++;
+                        }
+                    }
+                    if(bonPixel==true){
+                        break;
+                    }
+
+                }
+                compteurBonPixel=0;
+                image2.getPixelWriter().setColor(i,j,image.getPixelReader().getColor(y,x));
+                bonPixel=false;
+                compteurPixel++;
+            }
+        }
+
+
+
+
+        imageView.setImage(image2);
+        imageView.setFitHeight(hauteur);
+        imageView.setFitWidth(largeur);
+    }
+
+
+
 
     // tiré de : https://www.developpez.net/forums/d344729/java/general-java/apis/securite/appliquer-fonction-hachage-md5-texte/
     /*
