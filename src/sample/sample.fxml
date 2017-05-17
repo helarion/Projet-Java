@@ -1,56 +1,63 @@
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Slider?>
-
 <?import javafx.scene.control.ListView?>
-<VBox fx:controller="sample.Controller"
-      xmlns:fx="http://javafx.com/fxml" alignment="center" spacing="5">
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="center" spacing="5" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112" fx:controller="sample.Controller">
     <children>
-        <ImageView fx:id="imageView"/>
+        <ImageView fx:id="imageView" />
         <HBox>
-            <Button fx:id="openImageButton" text="Parcourir Image" onAction="#ajouterImageClicked"/>
-            <Button fx:id="openXMLButton" text="Parcourir XML" onAction="#ajouterXMLClicked"/>
+            <Button fx:id="openImageButton" onAction="#ajouterImageClicked" text="Parcourir Image" />
+            <Button fx:id="openXMLButton" onAction="#ajouterXMLClicked" text="Parcourir XML" />
         </HBox>
 
         <HBox fx:id="inputLayout">
             <children>
-                <Button fx:id="grbButton" text="GRB" onAction="#grbClicked"/>
-                <Button fx:id="nbButton" text="Noir et blanc" onAction="#nbClicked"/>
-                <Button fx:id="sepiaButton" text="Sepia" onAction="#sepiaClicked"/>
-                <Button fx:id="sobelButton" text="Sobel" onAction="#sobelClicked"/>
-                <Button fx:id="symButton" text="Symetrie" onAction="#symClicked"/>
-                <Button fx:id="chiffrerButto" text="Chiffrer" onAction="#chiffrerClicked"/>
+                <Button fx:id="grbButton" onAction="#grbClicked" text="GRB" />
+                <Button fx:id="nbButton" onAction="#nbClicked" text="Noir et blanc" />
+                <Button fx:id="sepiaButton" onAction="#sepiaClicked" text="Sepia" />
+                <Button fx:id="sobelButton" onAction="#sobelClicked" text="Sobel" />
+                <Button fx:id="symButton" onAction="#symClicked" text="Symetrie" />
+                <Button fx:id="chiffrerButto" onAction="#chiffrerClicked" text="Chiffrer" />
             </children>
         </HBox>
-        <Slider fx:id="slider"/>
+      <HBox prefHeight="35.0" prefWidth="820.0">
+         <children>
+            <Label text="Mot de Passe :" />
+             <TextField fx:id="motDePasseTextField" />
+         </children>
+      </HBox>
+        <Slider fx:id="slider" />
         <HBox spacing="10">
             <VBox>
-                <Label text="Créer un tag:"/>
-                <TextField fx:id="tagField"/>
-                <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
-                <Button fx:id="SupprimerTagButton" text="Supprimer un tag" onAction="#supprimerTagClicked"/>
+                <Label text="Créer un tag:" />
+                <TextField fx:id="tagField" />
+                <Button fx:id="ajouterTagButton" onAction="#ajouterTagClicked" text="Créer un tag" />
+                <Button fx:id="SupprimerTagButton" onAction="#supprimerTagClicked" text="Supprimer un tag" />
             </VBox>
             <VBox>
-                <Label text="Liste des Tags:"/>
-                <ListView fx:id="listeTag" maxWidth="200"></ListView>
+                <Label text="Liste des Tags:" />
+                <ListView fx:id="listeTag" maxWidth="200" />
             </VBox>
             <VBox>
-                <Label text="Rechercher des tags"/>
-                <TextField fx:id="rechercheTagTextField"/>
-                <Button text="Rechercher" onAction="#rechercherClicked"/>
+                <Label text="Rechercher des tags" />
+                <TextField fx:id="rechercheTagTextField" />
+                <Button onAction="#rechercherClicked" text="Rechercher" />
             </VBox>
             <VBox>
-                <Label text="Liste des images trouvées:"/>
-                <ListView fx:id="listeImage" maxWidth="200"></ListView>
+                <Label text="Liste des images trouvées:" />
+                <ListView fx:id="listeImage" maxWidth="200" />
             </VBox>
             <VBox>
-                <Button text="Selectionner" onAction="#selectionnerImageCLicked"/>
+                <Button onAction="#selectionnerImageCLicked" text="Selectionner" />
             </VBox>
         </HBox>
-        <Button fx:id="saveButton" text="Sauvegarder" onAction="#sauvegarderClicked"/>
+        <Button fx:id="saveButton" onAction="#sauvegarderClicked" text="Sauvegarder" />
     </children>
 </VBox>

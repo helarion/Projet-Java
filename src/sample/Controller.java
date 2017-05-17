@@ -10,6 +10,7 @@ package sample;
     import javafx.scene.control.TextField;
     import javafx.scene.image.Image;
     import javafx.scene.image.ImageView;
+    import javafx.scene.image.WritableImage;
     import javafx.scene.transform.Rotate;
     import javafx.stage.FileChooser;
     import javafx.stage.Stage;
@@ -21,7 +22,11 @@ package sample;
     import javax.xml.soap.Text;
     import java.awt.*;
     import java.io.File;
+    import java.security.MessageDigest;
+    import java.security.NoSuchAlgorithmException;
+    import java.security.SecureRandom;
     import java.util.ArrayList;
+    import java.util.Collections;
 
 public class Controller {
 
@@ -32,6 +37,7 @@ public class Controller {
     @FXML private ListView<String> listeTag;
     @FXML private ListView<String> listeImage;
     @FXML private TextField rechercheTagTextField;
+    @FXML private TextField motDePasseTextField;
 
     FiltreFactory filtre;
     int hauteur,largeur;
@@ -288,6 +294,97 @@ public class Controller {
     public void chiffrerClicked()
     {
 
+        ArrayList pixels = new ArrayList();
+
+        int compteurPixel=0;
+
+        for(int i=0;i<(image.getWidth()*image.getHeight());i++){
+            pixels.add(i);
+        }
+
+
+        String motDePasse=motDePasseTextField.getText();
+        String motChiffre=Controller.encode(motDePasse);
+        byte[] talbeau=motChiffre.getBytes();
+
+        byte[] seed=talbeau;
+
+        WritableImage image2=new WritableImage((int)image.getWidth(),(int)image.getHeight());
+        boolean bonPixel=false;
+        int compteurBonPixel=0;
+
+
+
+        Collections.shuffle(pixels, new SecureRandom(seed));
+        for(int i=0;i<pixels.size();i++){
+            System.out.println("donnée à l'indice " + i + " = " + pixels.get(i));
+        }
+        System.out.println("pixel 1 :");
+        for(int i = 0; i <image.getWidth(); i++) {
+            for(int j = 0; j <image.getHeight(); j++) {
+                System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
+                for(int k = 0; k <image.getWidth(); k++) {
+                    for(int l = 0; l <image.getHeight(); l++) {
+                        if(compteurBonPixel==(int)pixels.get(compteurPixel)){
+                            System.out.println("Pixel trouvé en ["+k+"]["+l+"]");
+                            image2.getPixelWriter().setColor(i,j,image.getPixelReader().getColor(k,l));
+                            bonPixel=true;
+                            break;
+                        }else{
+                            compteurBonPixel++;
+                        }
+                    }
+                    if(bonPixel==true){
+                        break;
+                    }
+                }
+                bonPixel=false;
+                compteurBonPixel=0;
+                compteurPixel++;
+            }
+        }
+
+        imageView.setImage(image2);
+        imageView.setFitHeight(hauteur);
+        imageView.setFitWidth(largeur);
+
+
+    }
+
+    // tiré de : https://www.developpez.net/forums/d344729/java/general-java/apis/securite/appliquer-fonction-hachage-md5-texte/
+    /*
+* Encode la chaine passé en paramètre avec l’algorithme MD5
+* @param key : la chaine à encoder
+* @return la valeur (string) hexadécimale sur 32 bits
+*/
+    public static String encode (String key)
+    {
+        byte[] uniqueKey = key.getBytes();
+        byte[] hash = null;
+
+//------------------------------------------------------------------------------------------------
+
+        try
+        {
+// on récupère un objet qui permettra de crypter la chaine
+            hash = MessageDigest.getInstance("MD5").digest(uniqueKey);
+        }
+        catch (NoSuchAlgorithmException e) {throw new Error("no MD5 support in this VM");}
+
+//-------------------------------------------------------------------------------------------------
+
+        StringBuffer hashString = new StringBuffer();
+        for (int i = 0; i < hash.length; ++i)
+        {
+            String hex = Integer.toHexString(hash[i]);
+            if (hex.length() == 1)
+            {
+                hashString.append(0);
+                hashString.append(hex.charAt(hex.length() - 1));
+            }
+            else {hashString.append(hex.substring(hex.length() - 2));}
+        }
+        return hashString.toString();
     }
 }
 
