@@ -11,6 +11,7 @@ public class FiltreNoirEtBlancFactory extends FiltreFactory {
     public FiltreNoirEtBlancFactory(Image image)
     {
         super(image);
+        setNom("Noir et blanc");
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)

@@ -6,11 +6,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Slider?>
 
+<?import javafx.scene.control.ListView?>
 <VBox fx:controller="sample.Controller"
-      xmlns:fx="http://javafx.com/fxml" alignment="center">
+      xmlns:fx="http://javafx.com/fxml" alignment="center" spacing="5">
     <children>
         <ImageView fx:id="imageView"/>
-        <Button fx:id="openButton" text="Parcourir" onAction="#ajouterClicked"/>
+        <HBox>
+            <Button fx:id="openImageButton" text="Parcourir Image" onAction="#ajouterImageClicked"/>
+            <Button fx:id="openXMLButton" text="Parcourir Image" onAction="#ajouterXMLClicked"/>
+        </HBox>
+
         <HBox fx:id="inputLayout">
             <children>
                 <Button fx:id="grbButton" text="GRB" onAction="#grbClicked"/>
@@ -18,14 +23,16 @@
                 <Button fx:id="sepiaButton" text="Sepia" onAction="#sepiaClicked"/>
                 <Button fx:id="sobelButton" text="Sobel" onAction="#sobelClicked"/>
                 <Button fx:id="symButton" text="Symetrie" onAction="#symClicked"/>
+                <Button fx:id="chiffrerButto" text="Chiffrer" onAction="#chiffrerClicked"/>
             </children>
-
         </HBox>
-        <Label text="Créer un tag:"/>
-        <TextField fx:id="tagField"/>
-        <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
         <Slider fx:id="slider"/>
-        <HBox fx:id="filtresLayout">
+        <HBox>
+        <Label text="Créer un tag:"/>
+            <TextField fx:id="tagField"/>
+            <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
         </HBox>
+        <ListView fx:id="listeFiltre" maxWidth="200"></ListView>
+        <Button fx:id="saveButton" text="Sauvegarder" onAction="#sauvegarderClicked"/>
     </children>
 </VBox>

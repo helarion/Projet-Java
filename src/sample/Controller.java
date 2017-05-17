@@ -2,44 +2,35 @@ package sample;
 
     import javafx.beans.value.ChangeListener;
     import javafx.beans.value.ObservableValue;
-    import javafx.event.ActionEvent;
     import javafx.fxml.FXML;
     import javafx.geometry.Point3D;
+    import javafx.scene.control.*;
     import javafx.scene.control.Button;
     import javafx.scene.control.Label;
-    import javafx.scene.control.Slider;
     import javafx.scene.control.TextField;
     import javafx.scene.image.Image;
     import javafx.scene.image.ImageView;
     import javafx.scene.layout.HBox;
-    import javafx.scene.layout.VBox;
-    import javafx.scene.text.Text;
     import javafx.scene.transform.Rotate;
     import javafx.stage.FileChooser;
     import javafx.stage.Stage;
 
+    import javax.xml.bind.JAXBContext;
+    import javax.xml.bind.JAXBException;
+    import javax.xml.bind.Marshaller;
+    import javax.xml.bind.Unmarshaller;
     import java.awt.*;
     import java.io.File;
-    import java.io.IOException;
     import java.util.ArrayList;
-    import java.util.logging.Level;
-    import java.util.logging.Logger;
 
 public class Controller {
 
-    @FXML private Button openButton;
-    @FXML private Button grbButton;
-    @FXML private Button nbButton;
-    @FXML private Button sepiaButton;
-    @FXML private Button sobelButton;
-    @FXML private Button ajouterTagButton;
+
     @FXML private Button symButton;
     @FXML private Slider slider;
     @FXML private ImageView imageView;
-    @FXML private HBox inputLayout;
-    @FXML private HBox filtresLayout;
-    @FXML private Label labelTag;
     @FXML private TextField tagField;
+    @FXML private ListView<String> listeFiltre;
 
     FiltreFactory filtre;
     int hauteur,largeur;
@@ -53,10 +44,11 @@ public class Controller {
         hauteur=500;
         largeur=500;
 
-        image = new Image("file:ressources/a.jpg");
+        String url="file:ressources/a.jpg";
+        image = new Image(url);
         imageProjet=new ImageProjet();
 
-        imageProjet.setImage(image);
+        imageProjet.setImage(url);
 
         imageView.setImage(image);
 
@@ -79,8 +71,7 @@ public class Controller {
             @Override
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 imageView.setRotate(slider.getValue());
-                /*gc.clearRect(0,0,800,800);
-                drawRotatedImage(gc, image, slider.getValue(), 0,   0);*/
+                imageProjet.setRotation((int)slider.getValue());
             } });
     }
 
@@ -88,35 +79,14 @@ public class Controller {
     protected void grbClicked() {
         filtre=new FiltreGRBFactory(image);
         filtre.setFilter(hauteur,largeur,imageView,image);
-        imageProjet.addFiltre(filtre);
+        imageProjet.setFiltre(filtre.getNom());
     }
 
     @FXML
     protected void nbClicked() {
         filtre=new FiltreNoirEtBlancFactory(image);
         filtre.setFilter(hauteur,largeur,imageView,image);
-        imageProjet.addFiltre(filtre);
-        imageProjet.toXml();
-    }
-
-    @FXML
-    protected void sepiaClicked() {
-        filtre=new FiltreSepiaFactory(image);
-        filtre.setFilter(hauteur,largeur,imageView,image);
-        imageProjet.addFiltre(filtre);
-    }
-
-    @FXML
-    protected void ajouterClicked() {
-        File file = fileChooser.showOpenDialog(new Stage());
-        if (file != null) {
-            image = new Image(file.toURI().toString());
-            imageView.setImage(image);
-            imageView.setFitHeight(hauteur);
-            imageView.setFitWidth(largeur);
-            //drawRotatedImage(gc, image,  0,   0,   0);
-            //inputLayout.getChildren().addAll(imageView);
-        }
+        imageProjet.setFiltre(filtre.getNom());
     }
 
     @FXML
@@ -124,6 +94,37 @@ public class Controller {
     {
         filtre=new FiltreSobelFactory(image);
         filtre.setFilter(hauteur,largeur,imageView,image);
+        imageProjet.setFiltre(filtre.getNom());
+    }
+
+    @FXML
+    protected void sepiaClicked() {
+        filtre=new FiltreSepiaFactory(image);
+        filtre.setFilter(hauteur,largeur,imageView,image);
+        imageProjet.setFiltre(filtre.getNom());
+    }
+
+    @FXML
+    protected void ajouterImageClicked() {
+        File file = fileChooser.showOpenDialog(new Stage());
+        if (file != null) {
+            image = new Image(file.toURI().toString());
+            imageProjet.setImage(file.toURI().toString());
+            imageView.setImage(image);
+            imageView.setFitHeight(hauteur);
+            imageView.setFitWidth(largeur);
+        }
+    }
+
+    @FXML
+    protected void ajouterXMLClicked() {
+        File file = fileChooser.showOpenDialog(new Stage());
+        if (file != null) {
+            imageProjet=fromXML(file.toURI().toString());
+            image = new Image(imageProjet.getImage());
+            imageView.setFitHeight(hauteur);
+            imageView.setFitWidth(largeur);
+        }
     }
 
     @FXML
@@ -132,6 +133,12 @@ public class Controller {
         String tag= tagField.getText();
         imageProjet.addTag(tag);
         updateTag();
+    }
+
+    @FXML
+    protected void sauvegarderClicked()
+    {
+        toXml(imageProjet);
     }
 
     @FXML
@@ -151,16 +158,62 @@ public class Controller {
         imageView.setRotationAxis(saveAxis);
     }
 
+    public void toXml(ImageProjet img)
+    {
+        try {
+            String nom=img.getImage();
+
+            String[] result = nom.split("/");
+            nom=result[result.length-1];
+            nom+=".xml";
+
+            System.out.println("nom:"+nom);
+            File file = new File(nom);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ImageProjet.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(img, file);
+            jaxbMarshaller.marshal(img, System.out);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public ImageProjet fromXML(String path)
+    {
+        try {
+            File file = new File(path);
+            JAXBContext jaxbContext = JAXBContext.newInstance(ImageProjet.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            ImageProjet imageProjet = (ImageProjet) jaxbUnmarshaller.unmarshal(file);
+            System.out.println(imageProjet);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return imageProjet;
+    }
+
     private void updateTag()
     {
-        filtresLayout.getChildren().clear();
+        listeFiltre.getItems().clear();
         ArrayList<String> list=imageProjet.getListeTag();
         for(int i=0;i<list.size();i++)
         {
             Label label = new Label(list.get(i)+" ");
-            filtresLayout.getChildren().add(label);
+            listeFiltre.getItems().add(list.get(i));
         }
-        imageProjet.toXml();
+    }
+
+    public void chiffrerClicked()
+    {
+
     }
 }
 

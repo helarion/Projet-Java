@@ -18,6 +18,7 @@ public class FiltreGRBFactory extends FiltreFactory {
     public FiltreGRBFactory(Image image)
     {
         super(image);
+        setNom("GRB");
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)

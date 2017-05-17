@@ -18,6 +18,7 @@ public class FiltreSobelFactory extends FiltreFactory {
     public FiltreSobelFactory(Image image)
     {
         super(image);
+        setNom("Sobel");
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)

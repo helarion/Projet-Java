@@ -18,6 +18,7 @@ public class FiltreSepiaFactory extends FiltreFactory {
     public FiltreSepiaFactory(Image image)
     {
         super(image);
+        setNom("Sepia");
     }
 
     public WritableImage setFilter(int hauteur, int largeur, ImageView imageView, Image image)
