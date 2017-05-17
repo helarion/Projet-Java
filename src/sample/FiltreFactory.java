@@ -13,14 +13,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.NONE)
 public abstract class FiltreFactory {
     private Color couleur;
     private WritableImage writable;
     PixelWriter writer;
 
-    @XmlValue
     String nom;
 
     public FiltreFactory() {}

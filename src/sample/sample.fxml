@@ -13,7 +13,7 @@
         <ImageView fx:id="imageView"/>
         <HBox>
             <Button fx:id="openImageButton" text="Parcourir Image" onAction="#ajouterImageClicked"/>
-            <Button fx:id="openXMLButton" text="Parcourir Image" onAction="#ajouterXMLClicked"/>
+            <Button fx:id="openXMLButton" text="Parcourir XML" onAction="#ajouterXMLClicked"/>
         </HBox>
 
         <HBox fx:id="inputLayout">
@@ -27,12 +27,30 @@
             </children>
         </HBox>
         <Slider fx:id="slider"/>
-        <HBox>
-        <Label text="Créer un tag:"/>
-            <TextField fx:id="tagField"/>
-            <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
+        <HBox spacing="10">
+            <VBox>
+                <Label text="Créer un tag:"/>
+                <TextField fx:id="tagField"/>
+                <Button fx:id="ajouterTagButton" text="Créer un tag" onAction="#ajouterTagClicked"/>
+                <Button fx:id="SupprimerTagButton" text="Supprimer un tag" onAction="#supprimerTagClicked"/>
+            </VBox>
+            <VBox>
+                <Label text="Liste des Tags:"/>
+                <ListView fx:id="listeTag" maxWidth="200"></ListView>
+            </VBox>
+            <VBox>
+                <Label text="Rechercher des tags"/>
+                <TextField fx:id="rechercheTagTextField"/>
+                <Button text="Rechercher" onAction="#rechercherClicked"/>
+            </VBox>
+            <VBox>
+                <Label text="Liste des images trouvées:"/>
+                <ListView fx:id="listeImage" maxWidth="200"></ListView>
+            </VBox>
+            <VBox>
+                <Button text="Selectionner" onAction="#selectionnerImageCLicked"/>
+            </VBox>
         </HBox>
-        <ListView fx:id="listeFiltre" maxWidth="200"></ListView>
         <Button fx:id="saveButton" text="Sauvegarder" onAction="#sauvegarderClicked"/>
     </children>
 </VBox>

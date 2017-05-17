@@ -10,7 +10,6 @@ package sample;
     import javafx.scene.control.TextField;
     import javafx.scene.image.Image;
     import javafx.scene.image.ImageView;
-    import javafx.scene.layout.HBox;
     import javafx.scene.transform.Rotate;
     import javafx.stage.FileChooser;
     import javafx.stage.Stage;
@@ -19,25 +18,26 @@ package sample;
     import javax.xml.bind.JAXBException;
     import javax.xml.bind.Marshaller;
     import javax.xml.bind.Unmarshaller;
+    import javax.xml.soap.Text;
     import java.awt.*;
     import java.io.File;
     import java.util.ArrayList;
 
 public class Controller {
 
-
     @FXML private Button symButton;
     @FXML private Slider slider;
     @FXML private ImageView imageView;
     @FXML private TextField tagField;
-    @FXML private ListView<String> listeFiltre;
+    @FXML private ListView<String> listeTag;
+    @FXML private ListView<String> listeImage;
+    @FXML private TextField rechercheTagTextField;
 
     FiltreFactory filtre;
     int hauteur,largeur;
     Image image;
     ImageProjet imageProjet;
     FileChooser fileChooser;
-    Desktop desktop;
 
     public void initialize() {
 
@@ -120,10 +120,21 @@ public class Controller {
     protected void ajouterXMLClicked() {
         File file = fileChooser.showOpenDialog(new Stage());
         if (file != null) {
+            imageProjet=null;
             imageProjet=fromXML(file.toURI().toString());
             image = new Image(imageProjet.getImage());
+            imageView.setImage(image);
             imageView.setFitHeight(hauteur);
             imageView.setFitWidth(largeur);
+            slider.setValue((double)imageProjet.getRotation());
+            String nomFiltre=imageProjet.getFiltre();
+            System.out.println("filtre:"+nomFiltre);
+            if(nomFiltre.equals("GRB")) grbClicked();
+            else if(nomFiltre.equals("Sepia")) sepiaClicked();
+            else if(nomFiltre.equals("Noir et blanc")) nbClicked();
+            else if(nomFiltre.equals("Sobel")) sobelClicked();
+
+            updateTag();
         }
     }
 
@@ -136,9 +147,68 @@ public class Controller {
     }
 
     @FXML
+    protected void supprimerTagClicked()
+    {
+        if(listeTag.getSelectionModel().getSelectedItem()!=null) {
+            int index=listeTag.getSelectionModel().getSelectedIndex();
+            System.out.println("index:"+index);
+            imageProjet.getListeTag().remove(index);
+            updateTag();
+        }
+    }
+
+    @FXML
     protected void sauvegarderClicked()
     {
         toXml(imageProjet);
+    }
+
+    @FXML
+    protected void rechercherClicked()
+    {
+        listeImage.getItems().clear();
+        String recherche=rechercheTagTextField.getText();
+        File dir = new File ("./bibliotheque");
+        if (dir.isDirectory()) {
+            ArrayList<ImageProjet> listImage = new ArrayList<ImageProjet>();
+            File[] fileList = dir.listFiles();
+            for (File f : fileList) {
+                ImageProjet img=fromXML(f.getPath());
+                for(int i=0;i<img.getListeTag().size();i++)
+                {
+                    if(img.getListeTag().get(i).equals(recherche))
+                    {
+                        listImage.add(img);
+                        System.out.println(f);
+                        listeImage.getItems().add(f.getPath());
+                    }
+                }
+            }
+        }
+    }
+
+    @FXML
+    protected void selectionnerImageCLicked()
+    {
+        if(listeImage.getSelectionModel().getSelectedItem()!=null)
+        {
+            String path=listeImage.getSelectionModel().getSelectedItem().toString();
+            imageProjet=null;
+            imageProjet=fromXML(path);
+            image = new Image(imageProjet.getImage());
+            imageView.setImage(image);
+            imageView.setFitHeight(hauteur);
+            imageView.setFitWidth(largeur);
+            slider.setValue((double)imageProjet.getRotation());
+            String nomFiltre=imageProjet.getFiltre();
+            System.out.println("filtre:"+nomFiltre);
+            if(nomFiltre.equals("GRB")) grbClicked();
+            else if(nomFiltre.equals("Sepia")) sepiaClicked();
+            else if(nomFiltre.equals("Noir et blanc")) nbClicked();
+            else if(nomFiltre.equals("Sobel")) sobelClicked();
+
+            updateTag();
+        }
     }
 
     @FXML
@@ -164,10 +234,10 @@ public class Controller {
             String nom=img.getImage();
 
             String[] result = nom.split("/");
-            nom=result[result.length-1];
+            nom="bibliotheque/"+result[result.length-1];
             nom+=".xml";
 
-            System.out.println("nom:"+nom);
+            //System.out.println("nom:"+nom);
             File file = new File(nom);
             JAXBContext jaxbContext = JAXBContext.newInstance(ImageProjet.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -186,28 +256,32 @@ public class Controller {
 
     public ImageProjet fromXML(String path)
     {
+        ImageProjet r=new ImageProjet();
         try {
+            String[] result = path.split("file:");
+            if(result.length>1)path=result[1];
+            else path=result[0];
+            //System.out.println("chemin:"+path);
             File file = new File(path);
             JAXBContext jaxbContext = JAXBContext.newInstance(ImageProjet.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            ImageProjet imageProjet = (ImageProjet) jaxbUnmarshaller.unmarshal(file);
-            System.out.println(imageProjet);
+            r = (ImageProjet) jaxbUnmarshaller.unmarshal(file);
 
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-        return imageProjet;
+        return r;
     }
 
     private void updateTag()
     {
-        listeFiltre.getItems().clear();
+        listeTag.getItems().clear();
         ArrayList<String> list=imageProjet.getListeTag();
         for(int i=0;i<list.size();i++)
         {
             Label label = new Label(list.get(i)+" ");
-            listeFiltre.getItems().add(list.get(i));
+            listeTag.getItems().add(list.get(i));
         }
     }
 
