@@ -316,9 +316,9 @@ public class Controller {
 
 
         Collections.shuffle(pixels, new SecureRandom(seed));
-        for(int i=0;i<pixels.size();i++){
+        /*for(int i=0;i<pixels.size();i++){
             System.out.println("donnée à l'indice " + i + " = " + pixels.get(i));
-        }
+        }*/
         for(int i = 0; i <image.getWidth(); i++) {
             for(int j = 0; j <image.getHeight(); j++) {
                 //System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
@@ -378,9 +378,9 @@ public class Controller {
 
 
         Collections.shuffle(pixels, new SecureRandom(seed));
-        for(int i=0;i<pixels.size();i++){
+        /*for(int i=0;i<pixels.size();i++){
             System.out.println("donnée à l'indice " + i + " = " + pixels.get(i));
-        }
+        }*/
         for(int i = 0; i <image.getWidth(); i++) {
             for(int j = 0; j <image.getHeight(); j++) {
                 //System.out.println("Pixel à trouver : n°"+pixels.get(compteurPixel));
