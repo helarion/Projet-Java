@@ -349,7 +349,7 @@ public class Controller {
 
 
     }
-
+    Image tmp;
     public void dechiffrerClicked(){
 
         ArrayList pixels = new ArrayList();
@@ -357,6 +357,7 @@ public class Controller {
         int y=0;
 
         int compteurPixel=0;
+        tmp=image;
         image=image3;
 
         for(int i=0;i<(image.getWidth()*image.getHeight());i++){
@@ -412,6 +413,7 @@ public class Controller {
         imageView.setImage(image2);
         imageView.setFitHeight(hauteur);
         imageView.setFitWidth(largeur);
+        image=tmp;
     }
 
 
